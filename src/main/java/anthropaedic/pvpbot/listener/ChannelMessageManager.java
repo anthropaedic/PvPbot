@@ -2,11 +2,16 @@ package anthropaedic.pvpbot.listener;
 
 import java.util.Objects;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.hooks.SubscribeEvent;
 
 public class ChannelMessageManager  {
@@ -29,22 +34,38 @@ public class ChannelMessageManager  {
 	{
 		if(canSendMessage(event))
 		{
-			((TextChannel) myChannel).sendMessage(event.getMessage()).queue();
-			System.out.println("Message sent: " + event.getMessage().getContentStripped());
+			sendMessage(event.getMessage());
 		}
 		System.out.println("Can't send nuffin!");
+	}
+
+	@SubscribeEvent
+	public void receivedMessageReactionAddEvent(MessageReactionAddEvent event) 
+	{
+		MessageReaction r;
+		System.out.println("Message: " + event.getMessageId() + " added reaction "); 
+		printUnicode(event.getReactionEmote().getName());
+	}
+
+	@SubscribeEvent
+	public void receivedMessageRemoveEvent(MessageReactionRemoveEvent event) 
+	{
+		System.out.println("Message: " + event.getMessageId() + " removed reaction ");
+		printUnicode(event.getReactionEmote().getName());
+	}
+
+	private void printUnicode(String emoji) 
+	{
+		System.out.println("Escaped:\t" + StringEscapeUtils.escapeJava(emoji));
+		System.out.println("Unescaped:\t" + StringEscapeUtils.unescapeJava(emoji));
 	}
 	
 	private void sendMessage(Message message) 
 	{
-		
+		((TextChannel) myChannel).sendMessage(message).queue();
+		System.out.println("Message sent: " + message.getContentStripped());
 	}
-	
-	private void sendMessage(String message)
-	{
 		
-	}
-	
 	private boolean canSendMessage(MessageReceivedEvent event)
 	{
 		return 	isDesignatedChannel(event) &&
