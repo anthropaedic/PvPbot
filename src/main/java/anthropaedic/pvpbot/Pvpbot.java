@@ -4,10 +4,11 @@ import javax.security.auth.login.LoginException;
 
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 
-import anthropaedic.pvpbot.listener.MessageManager;
+import anthropaedic.pvpbot.listener.ChannelMessageManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.hooks.AnnotatedEventManager;
 
 public class Pvpbot {
@@ -37,18 +38,20 @@ public class Pvpbot {
 			api = new JDABuilder(AccountType.BOT)
 					.setToken(token)
 					.setEventManager(new AnnotatedEventManager())
-					.buildAsync();
+					.buildBlocking();
 		} 
 		catch (LoginException | IllegalArgumentException e) 
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();	
+			System.err.println("Invalid bot token received.");
+		} catch (InterruptedException e) {
+			System.err.println("Bot start up interrupted.");
 		}
 	}
 	
 	private void registerListeners() 
 	{
-		
+		Channel listenChannel = api.getTextChannelById("341084468435484672");
+		api.addEventListener(new ChannelMessageManager(listenChannel));
 		api.addEventListener(new EventWaiter());
 	}
 	
