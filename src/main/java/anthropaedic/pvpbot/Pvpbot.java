@@ -4,7 +4,7 @@ import javax.security.auth.login.LoginException;
 
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 
-import anthropaedic.pvpbot.listener.ChannelMessageManager;
+import anthropaedic.pvpbot.listener.EchoChannelMessageManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -17,14 +17,14 @@ public class Pvpbot {
 	
 	public static void main(String[] args) 
 	{
-		Pvpbot myBot = new Pvpbot();
+		// For testing
+		final String token = "NDM3MzQ1ODc5NzMzNjk4NTcy.Db1HbA.oqBigO58PVrYxIlIBEcv_8t3YRs";
+		final String echoChannel = "341084468435484672";
+		
+		Pvpbot myBot = new Pvpbot(token);
+		myBot.setEchoChannel(echoChannel);
 	}
-	
-	public Pvpbot() 
-	{
-		this("NDM3MzQ1ODc5NzMzNjk4NTcy.Db1HbA.oqBigO58PVrYxIlIBEcv_8t3YRs");
-	}
-	
+		
 	public Pvpbot(String token) 
 	{
 		this.token = token;
@@ -32,6 +32,11 @@ public class Pvpbot {
 		registerListeners();
 	}
 	
+	public void setEchoChannel(String echoChannel) {
+		Channel listenChannel = api.getTextChannelById(echoChannel);
+		api.addEventListener(new EchoChannelMessageManager(listenChannel));
+	}
+
 	private void login() {
 		try 
 		{
@@ -50,8 +55,6 @@ public class Pvpbot {
 	
 	private void registerListeners() 
 	{
-		Channel listenChannel = api.getTextChannelById("341084468435484672");
-		api.addEventListener(new ChannelMessageManager(listenChannel));
 		api.addEventListener(new EventWaiter());
 	}
 	

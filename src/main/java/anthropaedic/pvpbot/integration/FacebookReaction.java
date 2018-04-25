@@ -8,7 +8,6 @@ public enum FacebookReaction
 	SAD,
 	ANGRY,
 	LIKE,
-	DISLIKE;
+	DISLIKE,
+	INVALID;
 }
-
-
