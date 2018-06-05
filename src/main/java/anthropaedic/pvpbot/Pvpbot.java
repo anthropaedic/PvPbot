@@ -21,6 +21,7 @@ public class Pvpbot {
 		final String token = "NDM3MzQ1ODc5NzMzNjk4NTcy.Db1HbA.oqBigO58PVrYxIlIBEcv_8t3YRs";
 		final String echoChannel = "341084468435484672";
 		
+//		WebhookHttpServer server = new WebhookHttpServer();
 		Pvpbot myBot = new Pvpbot(token);
 		myBot.setEchoChannel(echoChannel);
 	}
